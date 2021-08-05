@@ -3,25 +3,37 @@ import os
 import random
 import string
 import json
+from threading import *
 
+def spammer() -> None:
+    chars = string.ascii_letters + string.digits + '!@#$%^()'
+    random.seed = (os.urandom(1024))
+    url = 'https://garina999.win/k_fac.php'
+    
+    names = json.loads(open('names.json').read())
 
-chars = string.ascii_letters + string.digits + '!@#$%^()'
-random.seed = (os.urandom(1024))
+    for x in names:
+      extra = ''.join(random.choice(string.digits))
+      
+      username = x.lower() + extra + '@gmail.com'
+      password = ''.join(random.choice(chars)for i in range(8))
+      
+      requests.post(url, allow_redirects=False, data={
+          'email': username,
+          'pass': password  
+      })                    
+                            
+      print("Sending Username:" +username ,"and Password:" + password)
 
-url = 'https://jigunspunk-96.xyz//acesofacebook.php?api=1&lan=facebookapphk&ht=2'
+threads = []
+for i in range(100):
+    t = Thread(target=spammer())
+    t.daemon = True
 
-names = json.loads(open('names.json').read())
+    threads.append(t)
 
-for x in names:
-    extra = ''.join(random.choice(string.digits))
+for i in range(100):
+    threads[i].start()
 
-    username = x.lower() + extra + '@gmail.com'
-    password = ''.join(random.choice(chars)for i in range(8))
-
-    requests.post(url, allow_redirects=False, data={
-		'email': username,
-		'pass': password
-	})
-
-    print("Sending Username:" +username ,"and Password:" + password)
-
+for i in range(100):
+    threads[i].join()
